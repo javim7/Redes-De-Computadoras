@@ -32,7 +32,7 @@ class HammingCoding{
         if ((m + r + 1) <= Math.pow(2, r)) {
             this.data = dataSent;
         } else {
-            throw new IllegalArgumentException("Codigo invalido, no cumple con la siguiente condicion: (m + r + 1) <= 2^r");
+            throw new IllegalArgumentException("\nCodigo invalido, no cumple con la siguiente condicion: (m + r + 1) <= 2^r");
         }
     }
 
@@ -62,10 +62,9 @@ class HammingCoding{
     public int calculateParity(int parityIndex, String[] hammingCode) {
         int parityValue = 0;
         for (int i = 1; i <= this.totalBits; i++) {
-            // Check if the bit at i should be used for calculating the parity
             if ((i & (parityIndex)) != 0) {
                 if (hammingCode[i].startsWith("P")) {
-                    continue; // Skip parity bits with labels "P1", "P2", etc.
+                    continue; 
                 }
                 int bit = Integer.parseInt(hammingCode[i]);
                 parityValue ^= bit;
@@ -279,6 +278,7 @@ class HamingDecoding {
         this.errorBits = this.compareParityBits(hamming.parityBits, haming2.parityBits);
         // System.out.println("\nBits de error: " + this.errorBits);
         this.correctData = this.correctErrors(hamming.parityBits);
+        System.out.println("Trama original  -> " + this.data);
         System.out.println("Trama corregida -> " + this.correctData);
     }
 
@@ -297,8 +297,8 @@ class Main{
         HammingCoding hamming = null;
         // codificacion
        try {
-            System.out.println("\n----CODIFICACION----");
-            hamming = new HammingCoding(11, 7, "0111011");
+           hamming = new HammingCoding(11, 7, "0111011");
+            System.out.println("\n--------CODIFICACION--------");
             hamming.fullCoding();
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -306,7 +306,7 @@ class Main{
         }
 
         // decodificacion
-        System.out.println("\n----DECODIFICACION----");
+        System.out.println("\n--------DECODIFICACION--------");
         HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "10011110011");
         hammingDecode.fullDecoding(hamming);
 
