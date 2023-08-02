@@ -297,7 +297,7 @@ class Hamming{
         HammingCoding hamming = null;
         // codificacion
        try {
-           hamming = new HammingCoding(11, 7, "0111011");
+           hamming = new HammingCoding(38, 32, "10000100001001001110001010011001");
             System.out.println("\n--------CODIFICACION--------");
             hamming.fullCoding();
         } catch (IllegalArgumentException e) {
@@ -307,10 +307,8 @@ class Hamming{
 
         // decodificacion
         System.out.println("\n--------DECODIFICACION--------");
-        HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "10011110011");
+        HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "10100001010000101010011100010101011001");
         hammingDecode.fullDecoding(hamming);
-
-       
     }
     
 }
