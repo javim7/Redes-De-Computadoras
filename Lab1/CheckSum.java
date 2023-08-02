@@ -206,7 +206,7 @@ class CheckSum {
         String checksum = sender.checkSum;
 
         System.out.println("\n----RECIBIENDO MENSAJE----");
-        CheckSumReceiver receiver = new CheckSumReceiver("10101000 " + checksum);
+        CheckSumReceiver receiver = new CheckSumReceiver("10101011 " + checksum);
         receiver.receiveMessage();
     }
 }

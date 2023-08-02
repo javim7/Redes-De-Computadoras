@@ -306,9 +306,14 @@ class Hamming{
         }
 
         // decodificacion
-        System.out.println("\n--------DECODIFICACION--------");
-        HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "10100001010000101010011100010101011001");
-        hammingDecode.fullDecoding(hamming);
+        try {
+            System.out.println("\n--------DECODIFICACION--------");
+            HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "10100001010000100010011100010101011001");
+            hammingDecode.fullDecoding(hamming);
+        } catch(Exception e) {
+            System.out.println("\nError: Hamming no puede corregir mas de un error.");
+            return;
+        }
     }
     
 }
