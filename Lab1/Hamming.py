@@ -225,14 +225,14 @@ class HammingDecoding:
         haming2.fullCoding()
         self.errorBits = self.compareParityBits(hamming.parityBits, haming2.parityBits)
         self.correctData = self.correctErrors(hamming.parityBits)
-        print("Trama corregida ->", self.correctData)
         print("Trama original  ->", self.data)
+        print("Trama corregida ->", self.correctData)
 
 
 """
 Main: Clase principal del programa.
 """
-class Main:
+class Hamming:
 
     def __init__(self):
         """
@@ -255,4 +255,4 @@ class Main:
 
 
 if __name__ == "__main__":
-    Main()
+    Hamming()

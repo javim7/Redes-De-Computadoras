@@ -285,9 +285,9 @@ class HamingDecoding {
 }
 
 /**
- * Main: Es la clase que se encarga de ejecutar el programa.
+ * Hamming: Es la clase que se encarga de ejecutar el programa.
  */
-class Main{
+class Hamming{
 
     /**
      * Metodo main para poder controlar el programa
