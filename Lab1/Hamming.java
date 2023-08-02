@@ -1,5 +1,18 @@
-import java.util.Arrays;
+/**
+ * Hamming.java: Es el archivo que implementa el algoritmo de hamming para poder codificar y decodificar una trama de datos.
+ * 
+ * @version 1.0  
+ * @since 01/08/2023
+ * @author Javier Mombiela
+ * @author Javier Valle
+ * 
+ */
 
+// import java.util.Arrays;
+
+/**
+ * HammingCoding: Es la clase que se encarga de codificar una trama de datos.
+ */
 class HammingCoding{
 
     private String data;
@@ -7,8 +20,14 @@ class HammingCoding{
     private int parityBitCount;
     public String hammingCode;
     public String parityBits;
-
-     public HammingCoding(int n, int m, String dataSent) {
+    
+    /**
+     * Constructor de la clase HammingCoding
+     * @param n la longitud de la trama de datos mas los bits de paridad
+     * @param m la longitud de la trama de datos
+     * @param dataSent la trama de datos
+     */
+    public HammingCoding(int n, int m, String dataSent) {
         int r = n - m;
         if ((m + r + 1) <= Math.pow(2, r)) {
             this.data = dataSent;
@@ -17,6 +36,10 @@ class HammingCoding{
         }
     }
 
+    /**
+     * Metodo que calcula la cantidad de bits de paridad que se necesitan para codificar la trama de datos
+     * @return la cantidad de bits de paridad
+     */
     public int calculateParityBits() {
         int m = this.data.length();
         int r = 0;
@@ -30,7 +53,13 @@ class HammingCoding{
         return r;
     }
 
-    private int calculateParity(int parityIndex, String[] hammingCode) {
+    /**
+     * Metodo para calcular el valor de un bit de paridad
+     * @param parityIndex el indice del bit de paridad
+     * @param hammingCode el arreglo que contiene la trama de datos
+     * @return el valor del bit de paridad
+     */
+    public int calculateParity(int parityIndex, String[] hammingCode) {
         int parityValue = 0;
         for (int i = 1; i <= this.totalBits; i++) {
             // Check if the bit at i should be used for calculating the parity
@@ -45,6 +74,10 @@ class HammingCoding{
         return parityValue;
     }      
 
+    /**
+     * Metodo para definir las posiciones de los bits de paridad
+     * @return un arreglo con las posiciones de los bits de paridad
+     */
     public String[] definePositions() {
         String[] hammingCodeArray = new String[this.totalBits + 1];
     
@@ -69,6 +102,11 @@ class HammingCoding{
         return hammingCodeArray;
     }    
 
+    /**
+     * Metodo para obtener el codigo de hamming y los bits de paridad
+     * @param hammingCodeArray el arreglo que contiene la trama de datos
+     * @return un arreglo con el codigo de hamming y los bits de paridad
+     */
     public String[] getCode(String[] hammingCodeArray) {
         StringBuilder hammingCode = new StringBuilder();
         StringBuilder bitsInsideParentheses = new StringBuilder();
@@ -84,35 +122,50 @@ class HammingCoding{
         return new String[]{hammingCode.toString().replaceAll("[()]", ""), bitsInsideParentheses.toString()};
     }
 
+    /**
+     * Metodo para codificar la trama de datos
+     */
     public void fullCoding() {
-        System.out.println("\nTrama ingresada: " + this.data);
-        System.out.println("Numero de bits de paridad: " + calculateParityBits());
+        System.out.println("Trama ingresada           -> " + this.data);
+        System.out.println("Numero de bits de paridad -> " + calculateParityBits());
         String[] hammingCodeArray = definePositions();
         this.hammingCode = getCode(hammingCodeArray)[0];
         this.parityBits = getCode(hammingCodeArray)[1];
-        System.out.println("Codigo: " + this.hammingCode);
-        System.out.println("Bits de paridad: " + this.parityBits);
+        System.out.println("Bits de paridad           -> " + this.parityBits);
+        System.out.println("Codigo                    -> " + this.hammingCode);
     }
 
 }
 
+/**
+ * HamingDecoding: Es la clase que se encarga de decodificar una trama de datos.
+ */
 class HamingDecoding {
 
     private String data;
     public String wrongData;
     public String dataWithoutParityBits;
     public String errorBits;
-    public String parityBits;
+    public String parityBits = "";
     public int errorPosition;
     public String correctData;
 
+    /**
+     * Constructor de la clase HamingDecoding
+     * @param data la trama de datos correcta
+     * @param wrongData la trama de datos con errores
+     */
     public HamingDecoding(String data, String wrongData) {
         this.data = data;
         this.wrongData = wrongData;
-        System.out.println("\nTrama recibida: " + this.data);
-        System.out.println("Trama con errores recibida: " + this.wrongData);
+        System.out.println("Trama recibida            -> " + this.data);
+        System.out.println("Trama con errores         -> " + this.wrongData);
     }
 
+    /**
+     * Metodo para remover los bits de paridad de la trama de datos
+     * @return la trama de datos sin los bits de paridad
+     */
     public String removeParityBits() {
         StringBuilder dataWithoutParityBits = new StringBuilder();
         for (int i = 0; i < this.wrongData.length(); i++) {
@@ -122,10 +175,16 @@ class HamingDecoding {
                 this.parityBits += this.wrongData.charAt(i);
             }
         }
-        
+        // System.out.println("Bits de paridad recibidos: " + this.parityBits);
         return dataWithoutParityBits.toString();
     }
 
+    /**
+     * Metodo para comparar los bits de paridad de la trama de datos correcta y la trama de datos con errores
+     * @param parity1 los bits de paridad de la trama correcta
+     * @param parity2 los bits de paridad de la trama con errores
+     * @return los bits de error
+     */
     public String compareParityBits(String parity1, String parity2) {
         String errorBits = "";
         for (int i = 0; i < parity1.length(); i++) {
@@ -140,7 +199,11 @@ class HamingDecoding {
         return reversedErrorBits.toString();
     }
 
-    public int bitsToDecimals() {
+    /**
+     * Metodo para convertir los bits de error de binario a decimal
+     * @return los bits de error en decimal
+     */
+    public int binaryToDecimals() {
         int decimal = 0;
         StringBuilder reversedErrorBits = new StringBuilder(this.errorBits).reverse();
         for (int i = 0; i < reversedErrorBits.length(); i++) {
@@ -151,47 +214,90 @@ class HamingDecoding {
         return decimal;
     }
 
-    public String correctErrors() {
+    /**
+     * Metodo para corregir los errores de la trama de datos
+     * @param originalParity los bits de paridad de la trama correcta
+     * @return la trama de datos corregida
+     */
+    public String correctErrors(String originalParity) {
         int errorCount = 0;
+        StringBuilder parityCompared = new StringBuilder(compareParityBits(originalParity, this.parityBits)).reverse();
+        // System.out.println("\nBits de paridad originales: " + this.parityBits);
+        // System.out.println("Bits de paridad recibidos: " + originalParity);
+        // System.out.println("parity compared: " + parityCompared);
         String correct;
         int errorBitIndex = -1;
+
         for (int i = 0; i < this.errorBits.length(); i++) {
             if (this.errorBits.charAt(i) == '1') {
+                errorCount++;
+                // errorBitIndex = i;
+            }
+        }
+
+        for(int i = 0; i < parityCompared.length(); i++) {
+            if (parityCompared.charAt(i) == '1') {
                 errorCount++;
                 errorBitIndex = i;
             }
         }
+        // System.out.println("errorCount: " + errorCount);
+        // System.out.println("errorBitIndex: " + errorBitIndex);
 
         if (errorCount == 0) {
-            System.out.println("\nNo errors found.");
-            return this.wrongData;
+            System.out.println("\nNo se detectaron errores.");
+            correct = this.wrongData;
         } else if (errorCount == 1) {
-            StringBuilder reversedErrorBits = new StringBuilder(this.errorBits).reverse();
-            int parityBitPosition = reversedErrorBits.indexOf("1");
-            char correctedParityBit = this.parityBits.charAt(parityBitPosition);
-            correct = this.parityBits.substring(0, parityBitPosition) + (correctedParityBit == '0' ? '1' : '0') + this.parityBits.substring(parityBitPosition + 1);
-            System.out.println("Se corrigió el bit de paridad en la posición " + (parityBitPosition + 1));
-            return correct;
+            int wrongPosition = (int) Math.pow(2, errorBitIndex);
+            StringBuilder stringBuilder = new StringBuilder(this.wrongData);
+            char bitValue = this.wrongData.charAt(wrongPosition - 1);
+            stringBuilder.setCharAt(wrongPosition - 1, bitValue == '0' ? '1' : '0');
+
+            correct = stringBuilder.toString();
+            System.out.println("\nSe detectó un error, se corrigió el bit de paridad en la posición " + wrongPosition);
         } else {
-            int dataBitPosition = bitsToDecimals();
+            int dataBitPosition = binaryToDecimals();
             StringBuilder stringBuilder = new StringBuilder(this.wrongData);
             char bitValue = this.wrongData.charAt(dataBitPosition - 1);
             stringBuilder.setCharAt(dataBitPosition - 1, bitValue == '0' ? '1' : '0');
 
             correct = stringBuilder.toString();
-            System.out.println("Errores encontrados, se corrigió el bit en la posición " + (dataBitPosition));
-            return correct;
+            System.out.println("\nSe detectaron varios errores, se corrigió el bit en la posición " + (dataBitPosition));
         }
+        return correct;
+    }
+
+    /**
+     * Metodo para decodificar la trama de datos
+     * @param hamming la trama de datos codificada
+     */
+    public void fullDecoding(HammingCoding hamming) {
+        this.dataWithoutParityBits = this.removeParityBits();
+        // System.out.println("Trama sin bits de paridad -> " + this.dataWithoutParityBits);
+        HammingCoding haming2 = new HammingCoding(11, 7, this.dataWithoutParityBits);
+        haming2.fullCoding();
+        this.errorBits = this.compareParityBits(hamming.parityBits, haming2.parityBits);
+        // System.out.println("\nBits de error: " + this.errorBits);
+        this.correctData = this.correctErrors(hamming.parityBits);
+        System.out.println("Trama corregida -> " + this.correctData);
     }
 
 }
 
+/**
+ * Main: Es la clase que se encarga de ejecutar el programa.
+ */
 class Main{
 
+    /**
+     * Metodo main para poder controlar el programa
+     * @param args
+     */
     public static void main(String[] args) {
         HammingCoding hamming = null;
         // codificacion
        try {
+            System.out.println("\n----CODIFICACION----");
             hamming = new HammingCoding(11, 7, "0111011");
             hamming.fullCoding();
         } catch (IllegalArgumentException e) {
@@ -200,15 +306,11 @@ class Main{
         }
 
         // decodificacion
-        HamingDecoding hammingDecoding = new HamingDecoding(hamming.hammingCode, "10011110011");
-        hammingDecoding.dataWithoutParityBits = hammingDecoding.removeParityBits();
-        System.out.println("Trama sin bits de paridad: " + hammingDecoding.dataWithoutParityBits);
-        HammingCoding haming2 = new HammingCoding(11, 7, hammingDecoding.dataWithoutParityBits);
-        haming2.fullCoding();
-        hammingDecoding.errorBits = hammingDecoding.compareParityBits(hamming.parityBits, haming2.parityBits);
-        System.out.println("\nBits de error: " + hammingDecoding.errorBits);
-        hammingDecoding.correctData = hammingDecoding.correctErrors();
-        System.out.println("Trama corregida: " + hammingDecoding.correctData);
+        System.out.println("\n----DECODIFICACION----");
+        HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "10011110011");
+        hammingDecode.fullDecoding(hamming);
+
+       
     }
     
 }
