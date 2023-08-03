@@ -199,14 +199,15 @@ class CheckSumReceiver {
 class CheckSum {
     public static void main(String[] args) {
         System.out.println("\n----ENVIANDO MENSAJE----");
-        CheckSumSender sender = new CheckSumSender("10101010");
+        // CheckSumSender sender = new CheckSumSender("10011010");
         // CheckSumSender sender = new CheckSumSender("1010100100111001");
         // CheckSumSender sender = new CheckSumSender("10000100001001001110001010011001");
+        CheckSumSender sender = new CheckSumSender("10000111111001001110001010011010");
         sender.sendMessage();
         String checksum = sender.checkSum;
 
         System.out.println("\n----RECIBIENDO MENSAJE----");
-        CheckSumReceiver receiver = new CheckSumReceiver("10101011 " + checksum);
+        CheckSumReceiver receiver = new CheckSumReceiver("10100111 11100110 11100010 10011010 " + checksum);
         receiver.receiveMessage();
     }
 }

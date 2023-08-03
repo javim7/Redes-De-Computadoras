@@ -249,9 +249,13 @@ class Hamming:
             return
 
         #decodificacion
-        print("\n--------DECODIFICACION--------")
-        hammingDecoding = HammingDecoding(hamming.hammingCode, "10011110011")
-        hammingDecoding.fullDecoding(hamming)
+        try:
+            print("\n--------DECODIFICACION--------")
+            hammingDecoding = HammingDecoding(hamming.hammingCode, "10011110000")
+            hammingDecoding.fullDecoding(hamming)
+        except Exception as e:
+            print("\nSe ha detectado mas de un error en la trama!")
+            return
 
 
 if __name__ == "__main__":
