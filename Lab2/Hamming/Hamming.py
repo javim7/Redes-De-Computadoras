@@ -205,13 +205,15 @@ class HammingDecoding:
         elif errorCount == 1:
             wrongPosition = 2 ** errorBitIndex
             bitValue = self.wrongData[wrongPosition - 1]
+            print(wrongPosition)
             correct = self.wrongData[:wrongPosition - 1] + ('1' if bitValue == '0' else '0') + self.wrongData[wrongPosition:]
             print("\nSe detectó un error, se corrigió el bit de paridad en la posición", wrongPosition)
         else:
             dataBitPosition = self.binaryToDecimals()
             bitValue = self.wrongData[dataBitPosition - 1]
+            print(dataBitPosition)
             correct = self.wrongData[:dataBitPosition - 1] + ('1' if bitValue == '0' else '0') + self.wrongData[dataBitPosition:]
-            print("\nSe detectaron varios errores, se corrigió el bit en la posición", dataBitPosition)
+            print("\nSe detectaron varios errores de paridad, se corrigió el bit en la posición", dataBitPosition)
 
         return correct
 
@@ -241,7 +243,7 @@ class Hamming:
 
         #codificacion
         try:
-            hamming = HammingCoding(11, 7, "0111011")
+            hamming = HammingCoding(12, 8, "01100001")
             print("\n-------CODIFICACION--------")
             hamming.fullCoding()
         except ValueError as e:
@@ -251,7 +253,7 @@ class Hamming:
         #decodificacion
         try:
             print("\n--------DECODIFICACION--------")
-            hammingDecoding = HammingDecoding(hamming.hammingCode, "10011110000")
+            hammingDecoding = HammingDecoding(hamming.hammingCode, "111111010011")
             hammingDecoding.fullDecoding(hamming)
         except Exception as e:
             print("\nSe ha detectado mas de un error en la trama!")

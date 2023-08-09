@@ -1,3 +1,4 @@
+package Hamming;
 /**
  * Hamming.java: Es el archivo que implementa el algoritmo de hamming para poder codificar y decodificar una trama de datos.
  * 
@@ -261,7 +262,7 @@ class HamingDecoding {
             stringBuilder.setCharAt(dataBitPosition - 1, bitValue == '0' ? '1' : '0');
 
             correct = stringBuilder.toString();
-            System.out.println("\nSe detectaron varios errores, se corrigió el bit en la posición " + (dataBitPosition));
+            System.out.println("\nSe detectaron varios errores de paridad, se corrigió el bit en la posición " + (dataBitPosition));
         }
         return correct;
     }
@@ -297,7 +298,7 @@ class Hamming{
         HammingCoding hamming = null;
         // codificacion
        try {
-           hamming = new HammingCoding(38, 32, "10011100");
+           hamming = new HammingCoding(12, 8, "01100001");
             System.out.println("\n--------CODIFICACION--------");
             hamming.fullCoding();
         } catch (IllegalArgumentException e) {
@@ -308,7 +309,7 @@ class Hamming{
         // decodificacion
         try {
             System.out.println("\n--------DECODIFICACION--------");
-            HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "111100101011");
+            HamingDecoding hammingDecode = new HamingDecoding(hamming.hammingCode, "111111010011");
             hammingDecode.fullDecoding(hamming);
         } catch(Exception e) {
             System.out.println("\nSe ha detectado mas de un error.");
