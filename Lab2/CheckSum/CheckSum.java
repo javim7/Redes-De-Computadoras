@@ -203,12 +203,12 @@ class CheckSum {
         // CheckSumSender sender = new CheckSumSender("10011010");
         // CheckSumSender sender = new CheckSumSender("1010100100111001");
         // CheckSumSender sender = new CheckSumSender("10000100001001001110001010011001");
-        CheckSumSender sender = new CheckSumSender("01100100");
+        CheckSumSender sender = new CheckSumSender("01000001");
         sender.sendMessage();
         String checksum = sender.checkSum;
 
         System.out.println("\n----RECIBIENDO MENSAJE----");
-        CheckSumReceiver receiver = new CheckSumReceiver("01100010 " + checksum);
+        CheckSumReceiver receiver = new CheckSumReceiver("01101000 01101111 01101100 01100001 " + checksum);
         receiver.receiveMessage();
     }
 }

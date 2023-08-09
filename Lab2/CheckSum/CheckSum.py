@@ -170,13 +170,13 @@ class CheckSum:
         """
 
         print("----ENVIANDO MENSAJE----")
-        message = "1010100100111001"
+        message = "01000001"
         sender = CheckSumSender(message)
         sender.sendMessage()
         checksum = sender.checkSum
 
         print("\n----RECIBIENDO MENSAJE----")
-        message2 = "10101001 00111001"
+        message2 = "01000001"
         receiver = CheckSumReceiver(message2 + " " + checksum)
         receiver.receiveMessage()
 

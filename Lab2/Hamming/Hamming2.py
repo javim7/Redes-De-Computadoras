@@ -1,6 +1,5 @@
 import socket
 import random
-import math
 from Hamming import *
 
 class HammEmisor:
@@ -50,10 +49,12 @@ class HammEmisor:
         adjustment = base_prob / 2
 
         random_value = random.random()
-        if random_value < 0.5:
+        if random_value < 0.33:
             return base_prob - adjustment
-        else:
+        elif random_value < 0.66 and random_value >= 0.33:
             return base_prob + adjustment
+        else:
+            return base_prob
 
     def add_noise(self, text):
         noise_probability = self.calculate_noise_probability(text)
@@ -192,7 +193,8 @@ class HammReceptor():
                 self.decodedMessage = self.deCodeMessage(self.originalData)
                 print("Mensaje decodificado ->", self.decodedMessage)
             else:
-                print(self.decodedMessage(self.noisyData))
+                self.decodedMessage = self.deCodeMessage(self.noisyData)
+                print(self.decodedMessage)
         except Exception as e:
             self.errors = True
             self.decodedMessage = self.deCodeMessage(self.noisyData)
@@ -200,7 +202,8 @@ class HammReceptor():
 
 class Hamming2():
     def __init__(self):
-        print("\nQue desea hacer?")
+        print("\n---Hamming---")
+        print("Que desea hacer?")
         print("1. Emisor")
         print("2. Receptor")
 

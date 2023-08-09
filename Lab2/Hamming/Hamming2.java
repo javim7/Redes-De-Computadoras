@@ -72,10 +72,12 @@ class HammEmisor {
         double adjustment = baseProb / 2;
 
         double randomValue = Math.random();
-        if (randomValue < 0.5) {
+        if (randomValue < 0.33) {
             return baseProb - adjustment;
-        } else {
+        } else if (randomValue < 0.66 && randomValue >= 0.33) {
             return baseProb + adjustment;
+        } else {
+            return baseProb;
         }
     }
 
@@ -255,7 +257,8 @@ class Hamming2 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("\nQue desea hacer?");
+        System.out.println("\n----HAMMING----");
+        System.out.println("Que desea hacer?");
         System.out.println("1. Emisor");
         System.out.println("2. Receptor");
         System.out.print("Opcion -> ");
@@ -264,7 +267,6 @@ class Hamming2 {
         if (option == 1) {
 
             HammEmisor sender = new HammEmisor();
-
             sender.fullEmisor();
 
         } else if (option == 2) {
