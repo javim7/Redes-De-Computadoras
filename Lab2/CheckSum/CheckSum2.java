@@ -130,7 +130,7 @@ class CheckEmisor {
         // System.out.println("\nTexto original      : " + this.text);
         // System.out.println("Mensaje codificado  : " + this.codedMessage);
         // System.out.println("Mensaje con CheckSum: " + this.messageWithIntegrity);
-        // System.out.println("Mensaje con ruido   : " + this.messageWithNoise);
+        System.out.println("Mensaje con ruido   : " + this.messageWithNoise);
 
         try {
             sendData(socketClient, this.messageWithNoise);
