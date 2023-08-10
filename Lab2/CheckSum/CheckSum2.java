@@ -66,14 +66,7 @@ class CheckEmisor {
         double baseProb = 1 / errorsInInterval;
         double adjustment = baseProb / 2;
 
-        double randomValue = Math.random();
-        if (randomValue < 0.33) {
-            return baseProb - adjustment;
-        } else if (randomValue < 0.66 && randomValue >= 0.33) {
-            return baseProb + adjustment;
-        } else {
-            return baseProb;
-        }
+        return baseProb;
     }
 
     public String addNoise(String text) {
