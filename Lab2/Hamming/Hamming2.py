@@ -123,7 +123,7 @@ class HammReceptor():
                     if not data_received:
                         break # se termino de recibir todo
                     if data_received == b'\n': # If a newline character is encountered, process the message
-                        # print(f"\nRecibido: \n{data!r}")
+                        print(f"\nRecibido: \n{data!r}")
                         messages.append(data)
                         data = "" # Reset data for next message
                     else:

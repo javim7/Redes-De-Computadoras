@@ -74,22 +74,22 @@ class HammEmisor {
         int length = text.length();
         double errorsInInterval = length/2;
 
-        double baseProb = 1 / errorsInInterval;
-        double adjustment = baseProb / 2;
+        double baseProb = 1 / errorsInInterval; //0.25
+        return baseProb;
 
-        double randomValue = Math.random();
-        if (randomValue < 0.33) {
-            return baseProb - adjustment;
-        } else if (randomValue < 0.66 && randomValue >= 0.33) {
-            return baseProb + adjustment;
-        } else {
-            return baseProb;
-        }
+        // double randomValue = Math.random();
+        // if (randomValue < 0.33) {
+        //     return baseProb - adjustment;
+        // } else if (randomValue < 0.66 && randomValue >= 0.33) {
+        //     return baseProb + adjustment;
+        // } else {
+        //     return baseProb;
+        // }
     }
 
     public String addNoise(String text) {
         double noiseProbability = calculateNoiseProbability(text);
-        // System.out.println("Probabilidad de ruido: " + noiseProbability);
+        System.out.println("Probabilidad de ruido: " + noiseProbability);
         // noiseProbability = 0.08;
         StringBuilder noisyText = new StringBuilder();
 
@@ -138,7 +138,7 @@ class HammEmisor {
         // System.out.println("Mensaje codificado         : " + this.codedMessage);
         this.messageWithIntegrity = this.calculateIntegrity(this.codedMessage);
         this.messageWithNoise = this.addNoise(this.messageWithIntegrity);
-        // System.out.println("Mensaje con ruido          : " + this.messageWithNoise);
+        System.out.println("Mensaje con ruido          : " + this.messageWithNoise);
 
         try {
             sendData(socketClient, this.codedMessage, this.messageWithNoise);
@@ -270,8 +270,6 @@ class Hamming2 {
 
         if (option == 1) {
             ArrayList<String> text = new ArrayList<>();
-
-            // Read from the tests.txt file and populate the 'text' ArrayList
             try (BufferedReader reader = new BufferedReader(new FileReader("tests.txt"))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
