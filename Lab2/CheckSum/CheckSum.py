@@ -83,12 +83,12 @@ class CheckSumSender:
         """
 
         self.dividedMessage = self.divideMessage()
-        print("Mensaje          ->", self.message)
-        print("Mensaje Dividido ->", self.dividedMessage)
+        # print("Mensaje          ->", self.message)
+        # print("Mensaje Dividido ->", self.dividedMessage)
         self.checkSum = self.calculateCheckSum()
-        print("CheckSum         ->", self.checkSum)
+        # print("CheckSum         ->", self.checkSum)
         self.messageWithCheckSum = self.dividedMessage + " " + self.checkSum
-        print("Mensaje final    ->", self.messageWithCheckSum)
+        # print("Mensaje final    ->", self.messageWithCheckSum)
 
 """
 CheckSumReceiver: Clase que implementa el algoritmo de Checksum para la deteccion de errores en tramas de datos.
@@ -154,10 +154,10 @@ class CheckSumReceiver:
         Metodo para recibir la trama de datos con el Checksum.
         """
 
-        print("Mensaje recibido  ->", self.messageReceived)
+        # print("Mensaje recibido  ->", self.messageReceived)
         self.chekedSum = self.checkTheSum()
-        print("CheckSum recibido ->", self.chekedSum)
-        self.analyzeSum()
+        # print("CheckSum recibido ->", self.chekedSum)
+        # self.analyzeSum()
 
 """
 CheckSum: Clase que implementa el algoritmo de Checksum para la deteccion de errores en tramas de datos.

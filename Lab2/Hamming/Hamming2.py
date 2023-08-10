@@ -109,24 +109,27 @@ class HammReceptor():
         self.decodedMessage = ""
 
     def receive(self):
+        messages = []
         data = ""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             #asignar socket a ip: puerto especifico
             s.bind((self.HOST, self.PORT))
             s.listen()
-
-            # esperar conexion
             conn, addr = s.accept()
             with conn:
-                print(f"\nConexion entrante del proceso {addr}")
+                # print(f"\nConexion entrante del proceso {addr}")
                 while True:
-                    data_received = conn.recv(1024)
+                    data_received = conn.recv(1) # Read one byte at a time
                     if not data_received:
                         break # se termino de recibir todo
-                    data += data_received.decode("utf-8")
-                    print(f"\nRecibido: \n{data!r}")
-        
-        return data
+                    if data_received == b'\n': # If a newline character is encountered, process the message
+                        # print(f"\nRecibido: \n{data!r}")
+                        messages.append(data)
+                        data = "" # Reset data for next message
+                    else:
+                        data += data_received.decode("utf-8")
+        return messages
+
     
     def calculateParityBits(self, data):
         m = len(data)
@@ -139,10 +142,10 @@ class HammReceptor():
     def compareData(self, ogData, noisyData):
         if ogData == noisyData:
             self.errors = False
-            print("\nIntegridad verficada y trama correcta!")
+            # print("\nIntegridad verficada y trama correcta!")
         else:
             self.errors = True
-            print("\nIntegridad Incorrecta!")
+            # print("\nIntegridad Incorrecta!")
     
     def eliminateParityBits(self, data):
         original_data = ""
@@ -172,42 +175,52 @@ class HammReceptor():
 
     def fullReceptor(self):
         print("\nEsperando mensaje...")
-        dataRecieved = self.receive()
-        dataRecieved = dataRecieved.split(",")
-        self.ogData = dataRecieved[0]
-        self.noisyData = dataRecieved[1]
-        print("\nTrama original            ->", self.ogData)
-        print("Trama con errores         ->", self.noisyData)
+        messages = self.receive()
+        print(messages)
+        for message in messages:
+            dataRecieved = message.split(",")
+            self.ogData = dataRecieved[0]
+            self.noisyData = dataRecieved[1]
+            # print("\nTrama original            ->", self.ogData)
+            # print("Trama con errores         ->", self.noisyData)
 
-        #codificando y decodificando con los algoritmos originales
-        n = self.calculateParityBits(self.ogData) + len(self.ogData)
-        hamming = HammingCoding(n, len(self.ogData), self.ogData)
-        hamming.fullCoding()
-        try:
-            hammingDecoding = HammingDecoding(hamming.hammingCode, self.noisyData)
-            hammingDecoding.fullDecoding(hamming)
-            self.compareData(hamming.hammingCode, hammingDecoding.correctData)
-            self.originalData = self.eliminateParityBits(hammingDecoding.correctData)
-            if self.errors == False:
-                print("Trama corregida      ->", self.originalData)
-                self.decodedMessage = self.deCodeMessage(self.originalData)
-                print("Mensaje decodificado ->", self.decodedMessage)
-            else:
+            #codificando y decodificando con los algoritmos originales
+            n = self.calculateParityBits(self.ogData) + len(self.ogData)
+            hamming = HammingCoding(n, len(self.ogData), self.ogData)
+            hamming.fullCoding()
+            try:
+                hammingDecoding = HammingDecoding(hamming.hammingCode, self.noisyData)
+                hammingDecoding.fullDecoding(hamming)
+                self.compareData(hamming.hammingCode, hammingDecoding.correctData)
+                self.originalData = self.eliminateParityBits(hammingDecoding.correctData)
+                if self.errors == False:
+                    # print("Trama corregida      ->", self.originalData)
+                    self.decodedMessage = self.deCodeMessage(self.originalData)
+                    print("Mensaje decodificado ->", self.decodedMessage)
+                else:
+                    self.decodedMessage = self.deCodeMessage(self.noisyData)
+                    print(self.decodedMessage)
+            except Exception as e:
+                self.errors = True
                 self.decodedMessage = self.deCodeMessage(self.noisyData)
                 print(self.decodedMessage)
-        except Exception as e:
-            self.errors = True
-            self.decodedMessage = self.deCodeMessage(self.noisyData)
-            print(self.decodedMessage)
+
+            try:
+                with open("Lab2/Hamming/HammingResults.txt", "a") as f:
+                    f.write(self.decodedMessage + " " + str(len(self.ogData)) + "\n")  
+            except Exception as e:
+                print("Error writing decoded message to HammingResults.txt:", str(e))
+
 
 class Hamming2():
     def __init__(self):
-        print("\n---Hamming---")
-        print("Que desea hacer?")
-        print("1. Emisor")
-        print("2. Receptor")
+        # print("\n---Hamming---")
+        # print("Que desea hacer?")
+        # print("1. Emisor")
+        # print("2. Receptor")
 
-        opcion = int(input("Opcion -> "))
+        # opcion = int(input("Opcion -> "))
+        opcion = 2
 
         if opcion == 1:
             self.emisor()

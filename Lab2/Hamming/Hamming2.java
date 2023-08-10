@@ -1,12 +1,14 @@
 package Hamming;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.io.OutputStreamWriter;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -18,6 +20,10 @@ class HammEmisor {
     public String codedMessage = "";
     public String messageWithIntegrity = "";
     public String messageWithNoise = "";
+
+    public HammEmisor(String text) {
+        this.text = text;
+    }
 
     public String requestText() {
         System.out.println("\nIngrese el texto a enviar: ");
@@ -106,45 +112,40 @@ class HammEmisor {
         return noisyText.toString();
     }
 
-    public void sendData(String orignalData, String noisyData)
-        throws IOException, UnknownHostException, InterruptedException {
+    private void sendData(Socket socketClient, String originalData, String noisyData)
+        throws IOException, InterruptedException {
 
-            OutputStreamWriter writer = null;
-            System.out.println("\nIniciando emisor");
+        OutputStreamWriter writer = null;
 
-            //crear socket/conexion
-            Socket socketClient = new Socket(InetAddress.getByName(HOST), PORT);
+        //crear payload
+        String payload = originalData + "," + noisyData+ "\n";
 
-            //crear payload
-            String payload = orignalData + "," + noisyData;
+        //mandar data
+        // System.out.println("Enviando data");
+        writer = new OutputStreamWriter(socketClient.getOutputStream());
+        writer.write(payload);
+        writer.flush(); // Flush the output stream to ensure data is sent
+        Thread.sleep(100); // espera, opcional
 
-            //mandar data
-            System.out.println("Enviando data");
-            writer = new OutputStreamWriter(socketClient.getOutputStream());
-            writer.write(payload);
-            Thread.sleep(100); // espera, opcional
-
-            //limpieza
-            System.out.println("Liberando socket");
-            writer.close();
-            socketClient.close();
-
-        }
+        //limpieza
+        // System.out.println("Liberando socket");
+        // writer.close();
+    }
     
-    public void fullEmisor() {
-        this.text = this.requestText();
+    public void fullEmisor(Socket socketClient) {
+        // this.text = this.requestText();
         this.codedMessage = this.codeMessage(this.text);
-        System.out.println("Mensaje codificado         : " + this.codedMessage);
+        // System.out.println("Mensaje codificado         : " + this.codedMessage);
         this.messageWithIntegrity = this.calculateIntegrity(this.codedMessage);
         this.messageWithNoise = this.addNoise(this.messageWithIntegrity);
-        System.out.println("Mensaje con ruido          : " + this.messageWithNoise);
+        // System.out.println("Mensaje con ruido          : " + this.messageWithNoise);
 
         try {
-            this.sendData(this.codedMessage ,this.messageWithNoise);
+            sendData(socketClient, this.codedMessage, this.messageWithNoise);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+}
     
 }
 
@@ -256,19 +257,45 @@ class HammReceptor {
 class Hamming2 {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\n----HAMMING----");
-        System.out.println("Que desea hacer?");
-        System.out.println("1. Emisor");
-        System.out.println("2. Receptor");
-        System.out.print("Opcion -> ");
-        int option = scanner.nextInt();
+        String HOST = "127.0.0.1";
+        int PORT = 5555;
+        // Scanner scanner = new Scanner(System.in);
+        // System.out.println("\n----HAMMING----");
+        // System.out.println("Que desea hacer?");
+        // System.out.println("1. Emisor");
+        // System.out.println("2. Receptor");
+        // System.out.print("Opcion -> ");
+        // int option = scanner.nextInt();
+        int option = 1;
 
         if (option == 1) {
+            ArrayList<String> text = new ArrayList<>();
 
-            HammEmisor sender = new HammEmisor();
-            sender.fullEmisor();
+            // Read from the tests.txt file and populate the 'text' ArrayList
+            try (BufferedReader reader = new BufferedReader(new FileReader("tests.txt"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    text.add(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return; // Exit the program if there's an error reading the file
+            }
 
+            try {
+                // Establish socket connection outside the loop
+                Socket socketClient = new Socket(InetAddress.getByName(HOST), PORT);
+
+                for (String t : text) {
+                    HammEmisor sender = new HammEmisor(t);
+                    sender.fullEmisor(socketClient);
+                }
+
+                socketClient.close(); // Close the socket connection after sending all messages
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Mensajes enviados.");
         } else if (option == 2) {
             
             HammReceptor receiver = new HammReceptor();
@@ -278,6 +305,6 @@ class Hamming2 {
             System.out.println("Opcion Invalida.");
         }
 
-        scanner.close();
+        // scanner.close();
     }
 }

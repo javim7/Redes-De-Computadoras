@@ -126,13 +126,14 @@ class HammingCoding{
      * Metodo para codificar la trama de datos
      */
     public void fullCoding() {
-        System.out.println("Trama ingresada           -> " + this.data);
-        System.out.println("Numero de bits de paridad -> " + calculateParityBits());
+        // System.out.println("Trama ingresada           -> " + this.data);
+        calculateParityBits();
+        // System.out.println("Numero de bits de paridad -> " + calculateParityBits());
         String[] hammingCodeArray = definePositions();
         this.hammingCode = getCode(hammingCodeArray)[0];
         this.parityBits = getCode(hammingCodeArray)[1];
-        System.out.println("Bits de paridad           -> " + this.parityBits);
-        System.out.println("Codigo                    -> " + this.hammingCode);
+        // System.out.println("Bits de paridad           -> " + this.parityBits);
+        // System.out.println("Codigo                    -> " + this.hammingCode);
     }
 
 }

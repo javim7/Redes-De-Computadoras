@@ -103,12 +103,12 @@ class CheckSumSender {
      */
     public void sendMessage() {
         this.dividedMessage = this.divideMessage();
-        System.out.println("Mensaje          -> " + this.message);
-        System.out.println("Mensaje Dividido -> " + this.dividedMessage);
+        // System.out.println("Mensaje          -> " + this.message);
+        // System.out.println("Mensaje Dividido -> " + this.dividedMessage);
         this.checkSum = this.calculateCheckSum();
-        System.out.println("CheckSum         -> " + this.checkSum);
+        // System.out.println("CheckSum         -> " + this.checkSum);
         this.messageWithCheckSum = this.dividedMessage + " " + this.checkSum;
-        System.out.println("Mensaje final    -> " + this.messageWithCheckSum);
+        // System.out.println("Mensaje final    -> " + this.messageWithCheckSum);
     }
 }
 

@@ -103,12 +103,13 @@ class HammingCoding:
         Metodo para realizar la codificacion de la trama de datos.
         """
 
-        print("Trama ingresada           ->", self.data)
-        print("Numero de bits de paridad ->", self.calculateParityBits())
+        # print("Trama ingresada           ->", self.data)
+        self.calculateParityBits()
+        # print("Numero de bits de paridad ->", self.calculateParityBits())
         hammingCodeArray = self.definePositions()
         self.hammingCode, self.parityBits = self.getCode(hammingCodeArray)
-        print("Bits de paridad           ->", self.parityBits)
-        print("Codigo                    ->", self.hammingCode)
+        # print("Bits de paridad           ->", self.parityBits)
+        # print("Codigo                    ->", self.hammingCode)
 
 
 """
@@ -125,8 +126,8 @@ class HammingDecoding:
 
         self.data = data
         self.wrongData = wrongData
-        print("Trama recibida            ->", self.data)
-        print("Trama con errores         ->", self.wrongData)
+        # print("Trama recibida            ->", self.data)
+        # print("Trama con errores         ->", self.wrongData)
 
     def removeParityBits(self):
         """
@@ -200,20 +201,20 @@ class HammingDecoding:
                 errorBitIndex = i
 
         if errorCount == 0:
-            print("\nNo se detectaron errores.")
+            # print("\nNo se detectaron errores.")
             correct = self.wrongData
         elif errorCount == 1:
             wrongPosition = 2 ** errorBitIndex
             bitValue = self.wrongData[wrongPosition - 1]
             print(wrongPosition)
             correct = self.wrongData[:wrongPosition - 1] + ('1' if bitValue == '0' else '0') + self.wrongData[wrongPosition:]
-            print("\nSe detectó un error, se corrigió el bit de paridad en la posición", wrongPosition)
+            # print("\nSe detectó un error, se corrigió el bit de paridad en la posición", wrongPosition)
         else:
             dataBitPosition = self.binaryToDecimals()
             bitValue = self.wrongData[dataBitPosition - 1]
             print(dataBitPosition)
             correct = self.wrongData[:dataBitPosition - 1] + ('1' if bitValue == '0' else '0') + self.wrongData[dataBitPosition:]
-            print("\nSe detectaron varios errores de paridad, se corrigió el bit en la posición", dataBitPosition)
+            # print("\nSe detectaron varios errores de paridad, se corrigió el bit en la posición", dataBitPosition)
 
         return correct
 
@@ -227,8 +228,8 @@ class HammingDecoding:
         haming2.fullCoding()
         self.errorBits = self.compareParityBits(hamming.parityBits, haming2.parityBits)
         self.correctData = self.correctErrors(hamming.parityBits)
-        print("Trama original  ->", self.data)
-        print("Trama corregida ->", self.correctData)
+        # print("Trama original  ->", self.data)
+        # print("Trama corregida ->", self.correctData)
 
 
 """

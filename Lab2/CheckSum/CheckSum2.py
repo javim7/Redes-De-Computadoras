@@ -98,24 +98,26 @@ class CheckReceptor():
         self.decodedMessage = ""
 
     def receive(self):
+        messages = []
         data = ""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             #asignar socket a ip: puerto especifico
             s.bind((self.HOST, self.PORT))
             s.listen()
-
-            # esperar conexion
             conn, addr = s.accept()
             with conn:
                 print(f"\nConexion entrante del proceso {addr}")
                 while True:
-                    data_received = conn.recv(1024)
+                    data_received = conn.recv(1) # Read one byte at a time
                     if not data_received:
                         break # se termino de recibir todo
-                    data += data_received.decode("utf-8")
-                    print(f"\nRecibido: \n{data!r}")
-        
-        return data
+                    if data_received == b'\n': # If a newline character is encountered, process the message
+                        print(f"\nRecibido: \n{data!r}")
+                        messages.append(data)
+                        data = "" # Reset data for next message
+                    else:
+                        data += data_received.decode("utf-8")
+        return messages
     
     def verityIntegrity(self, data):
         receiver = CheckSumReceiver(data)
@@ -123,16 +125,16 @@ class CheckReceptor():
 
         if receiver.chekedSum == "00000000":
             self.errors = False
-            print("\nIntegridad verficada y trama correcta!")
+            # print("\nIntegridad verficada y trama correcta!")
         else:
             self.errors = True
-            print("\nIntegridad Incorrecta!")
+            # print("\nIntegridad Incorrecta!")
 
         return receiver.chekedSum
     
     def decodeMessage(self, data):
         if self.errors:
-            return "\nError: La trama contiene errores y será descartada!"
+            return "\nError: La trama contiene errores y sera descartada!"
         else:
             data = data[:-9]
             # Convert each binary chunk to ASCII value
@@ -145,23 +147,33 @@ class CheckReceptor():
 
     def fullReceptor(self):
         print("\nEsperando mensaje...")
-        self.dataRecieved = self.receive()
-        # print("\nMensaje recibido: ", self.dataRecieved)
-        self.checkedSum = self.verityIntegrity(self.dataRecieved)
-        # print("\nCheckSum recibido: ", self.checkedSum)
-        self.decodedMessage = self.decodeMessage(self.dataRecieved)
-        print("\nMensaje decodificado: ", self.decodedMessage)
+        # self.dataRecieved = self.receive()
+        mesaages = self.receive()
+        for message in mesaages:
+            self.dataRecieved = message
+            # print("\nMensaje recibido: ", self.dataRecieved)
+            self.checkedSum = self.verityIntegrity(self.dataRecieved)
+            # print("\nCheckSum recibido: ", self.checkedSum)
+            self.decodedMessage = self.decodeMessage(self.dataRecieved)
+            print("\nMensaje decodificado: ", self.decodedMessage)
+
+            try:
+                with open("Lab2/CheckSum/ChekSumResults.txt", "a") as f:
+                    f.write(self.decodedMessage + " " + str(len(self.dataRecieved.replace(" ", ""))) + "\n")  
+            except Exception as e:
+                print("Error writing decoded message to HammingResults.txt:", str(e))
 
         
 
 class CheckSum2():
     def __init__(self):
-        print("\n---CheckSum---")
-        print("Que desea hacer?")
-        print("1. Emisor")
-        print("2. Receptor")
+        # print("\n---CheckSum---")
+        # print("Que desea hacer?")
+        # print("1. Emisor")
+        # print("2. Receptor")
 
-        opcion = int(input("Opcion -> "))
+        # opcion = int(input("Opcion -> "))
+        opcion = 2
 
         if opcion == 1:
             self.emisor()
